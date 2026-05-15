@@ -4,6 +4,8 @@ import { PublicStackParamsList } from '@/routes/PublicRoutes';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
+import { schema } from './schema';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export interface FormLoginParams {
   email: string;
@@ -15,9 +17,19 @@ export const LoginForm = () => {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<FormLoginParams>();
+  } = useForm<FormLoginParams>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: yupResolver(schema),
+  });
 
   const navigation = useNavigation<NavigationProp<PublicStackParamsList>>();
+
+  const onSubmit = (data: FormLoginParams) => {
+    console.log(data);
+  };
 
   return (
     <>
@@ -38,7 +50,9 @@ export const LoginForm = () => {
       />
 
       <View className="mb-6 mt-8 min-h-[250px] flex-1 justify-between">
-        <AppButton iconName="arrow-forward">Login</AppButton>
+        <AppButton onPress={handleSubmit(onSubmit)} iconName="arrow-forward">
+          Login
+        </AppButton>
 
         <View>
           <Text className="mb-6 text-base text-gray-300">Ainda não possui uma conta?</Text>
