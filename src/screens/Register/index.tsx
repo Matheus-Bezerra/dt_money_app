@@ -1,9 +1,15 @@
-import { Text, View } from 'react-native';
+import { AuthHeader } from '@/components/AuthHeader';
+import { DismissKeyboardView } from '@/components/DismissKeyboardView';
+import { View } from 'react-native';
+import { RegisterForm } from './RegisterForm';
 
 export const Register = () => {
   return (
-    <View>
-      <Text>Register</Text>
-    </View>
+    <DismissKeyboardView>
+      <View className="w-[82%] flex-1 self-center">
+        <AuthHeader />
+        <RegisterForm />
+      </View>
+    </DismissKeyboardView>
   );
 };
