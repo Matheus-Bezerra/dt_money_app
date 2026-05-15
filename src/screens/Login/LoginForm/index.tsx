@@ -3,9 +3,11 @@ import { AppInput } from '@/components/AppInput';
 import { PublicStackParamsList } from '@/routes/PublicRoutes';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { schema } from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useAuthContext } from '@/context/auth.context';
+import { AxiosError } from 'axios';
 
 export interface FormLoginParams {
   email: string;
@@ -25,10 +27,19 @@ export const LoginForm = () => {
     resolver: yupResolver(schema),
   });
 
+  const { handleAuthenticate } = useAuthContext();
+
   const navigation = useNavigation<NavigationProp<PublicStackParamsList>>();
 
-  const onSubmit = (data: FormLoginParams) => {
-    console.log(data);
+  const onSubmit = async (data: FormLoginParams) => {
+    try {
+      await handleAuthenticate(data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        Alert.alert('Erro ao fazer login', error.response?.data);
+      }
+      console.log(error);
+    }
   };
 
   return (
